@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load avatar_tags %}
+{% load humanize %}
+
+{% block title %}{{ topic.name }} | {% endblock %}
+
+{% block content %}
+    <style type='text/css'>
+        p.post_body img { 
+            max-width: 800px;
+        }
+    </style>
+    <div class="row" style="margin-bottom: 0px;">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'forum:home' %}">Home</a></li>
+            <li><a href="{% url 'forum:forum' topic.forum.slug %}">{{ topic.forum.name }}</a></li>
+            <li class="active">{{ topic.name }} - {{ topic.old_topic_id }}</li>
+        </ol>
+    </div>
+    <div class="col-lg-12">
+        <div class="row" style="border-bottom: 1px solid #ccc;">
+            <div class="col-lg-3">
+                <br />
+                <div class="thumbnail">
+                    {% if topic.user %}
+                        {% avatar topic.user 256 %}
+                    {% endif %}
+                    <div class="caption text-right">
+                        {% if topic.user %}
+                            <a href="{{ topic.user.get_absolute_url }}">{{ topic.user }}</a>
+                        {% else %}
+                            {{ topic.get_body.legacy_username }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <h2>{{ topic.name }}</h2>
+                <div class="row">
+                    <div class="col-lg-9">
+                        {% if topic.user %}
+                            <small>posted by <a href="{{ topic.user.get_absolute_url }}">{{ topic.user }}</a>, {{ topic.created|naturaltime }}</small>
+                        {% else %}
+                            <small>posted by {{ topic.legacy_username }}, {{ topic.created|naturaltime }}</small>
+                        {% endif %}
+                        {% if topic.modified %}
+                            <small>, modified {{ topic.modified|naturaltime }}</small>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <small>from {{ topic.get_body.user_ip }}</small>
+                        {% elif user == topic.get_body.user %}
+                            <small>from {{ topic.get_body.user_ip }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-3" style="margin-top: -15px; text-right;">
+                        {% if user.is_superuser %}
+                            <a href="{% url 'forum:delete_topic' topic.forum.slug topic.id %}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                            <a href="{% url 'forum:create_topic' topic.forum.slug topic.id %}" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Delete</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr />
+                <p class="post_body">
+                    {{ topic.get_body.body_html|safe }}
+                </p>
+            </div>
+        </div>
+        {% for post in posts %}
+            {% if not forloop.counter == 1 %}
+            <div class="row" style="border-bottom: 1px solid #ccc; padding: 8px 0 8px 0;">
+                <div class="col-lg-12">
+                    <div class="col-lg-2">
+                        {% if post.user %}
+                            {% avatar post.user 128 %}<br />
+                            <a href="{{ post.user.profile.get_absolute_url }}">{{ post.user.username }}</a>
+                        {% else %}
+                            {{ post.legacy_username }}
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <small>Posted {{ post.created|naturaltime }}</small>
+                                {% if user.is_superuser %}
+                                    <small>from {{ post.user_ip }}</small>
+                                {% elif user == post.user %}
+                                    <small>from {{ post.user_ip }}</small>
+                                {% endif %}
+
+                                {% if post.modified %}<small>, last modified {{ post.modified|naturaltime }}</small>{% endif %}
+                            </div>
+                            <div class="col-lg-6">
+                            </div>
+                        </div>
+                        <hr />
+                        {{ post.body_html|safe }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <ul class="pager">
+            {% if posts.has_next %}
+                <li class="previous"><a href="?page={{ posts.paginator.num_pages }}">Newest</a></li>
+                <li class="previous"><a href="?page={{ posts.next_page_number }}">Newer</a></li>
+            {% endif %}
+            {% if posts.has_previous %}
+                <li class="next"><a href="?page=">Oldest</a></li>
+                <li class="next"><a href="?page={{ posts.previous_page_number }}">Older</a></li>
+            {% endif %}
+        </ul>
+
+    </div>
+{% endblock %}

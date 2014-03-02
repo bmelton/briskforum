@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}Create Topic | {% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h1>Create a Topic <small>in {{ forum.name }}</small></h1>
+        </div>
+
+        <form id="id_form" method="POST">
+            {% csrf_token %}
+            {{ apf|bootstrap_horizontal }}
+            <div class="col-lg-12 text-right">
+                <br />
+                <input class="btn btn-success" type="submit" name="submit" id="id_submit" value="Create Topic" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

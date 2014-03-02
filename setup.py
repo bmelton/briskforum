@@ -110,7 +110,8 @@ setup(
     packages = find_packages(),
     include_package_data=True,
     install_requires = [
-        'Django>=1.6',
+        'Django     >= 1.6',
+        'south      >= 0.8',
     ],
     classifiers = [
         'Development Status :: 3 - Alpha',
