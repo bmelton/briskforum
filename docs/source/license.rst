@@ -3,7 +3,7 @@ License
 
 The MIT License (MIT) 
 
-Copyright (c) <year> <copyright holders>
+Copyright (c) 2013 Barry Melton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy 
 of this software and associated documentatino files (the "Software"), to deal
