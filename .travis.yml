@@ -9,4 +9,5 @@ install:
     - pip install $DJANGO
     - export PYTHONPATH=.
 
-
+script:
+    - python brisk/runtests/runtests.py
