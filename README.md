@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bmelton/briskforum.png?branch=master)](https://travis-ci.org/bmelton/briskforum)
+
 Brisk Forum
 ===
 
